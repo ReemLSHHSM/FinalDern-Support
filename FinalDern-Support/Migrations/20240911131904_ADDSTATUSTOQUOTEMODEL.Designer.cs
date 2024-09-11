@@ -4,6 +4,7 @@ using FinalDern_Support.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinalDern_Support.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240911131904_ADDSTATUSTOQUOTEMODEL")]
+    partial class ADDSTATUSTOQUOTEMODEL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,9 +166,6 @@ namespace FinalDern_Support.Migrations
 
                     b.HasIndex("CustomerID");
 
-                    b.HasIndex("JobID")
-                        .IsUnique();
-
                     b.ToTable("Feedbacks");
                 });
 
@@ -177,16 +177,25 @@ namespace FinalDern_Support.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<int>("FeedbackID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");
 
                     b.Property<int>("QuoteID")
                         .HasColumnType("int");
 
+                    b.Property<int>("ReportID")
+                        .HasColumnType("int");
+
                     b.Property<int>("TechID")
                         .HasColumnType("int");
 
                     b.HasKey("ID");
+
+                    b.HasIndex("FeedbackID")
+                        .IsUnique();
 
                     b.HasIndex("QuoteID")
                         .IsUnique();
@@ -337,8 +346,9 @@ namespace FinalDern_Support.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<bool>("IsTaken")
-                        .HasColumnType("bit");
+                    b.Property<int?>("JobID")
+                        .IsRequired()
+                        .HasColumnType("int");
 
                     b.Property<string>("Location")
                         .IsRequired()
@@ -358,6 +368,9 @@ namespace FinalDern_Support.Migrations
                     b.HasKey("ID");
 
                     b.HasIndex("CustomerID");
+
+                    b.HasIndex("JobID")
+                        .IsUnique();
 
                     b.ToTable("Requests");
                 });
@@ -446,21 +459,21 @@ namespace FinalDern_Support.Migrations
                         new
                         {
                             Id = "admin",
-                            ConcurrencyStamp = "468d433f-61dd-41ca-ac83-828280c9ebe1",
+                            ConcurrencyStamp = "0e48161d-7fdb-4cef-bef8-b07d98912698",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "customer",
-                            ConcurrencyStamp = "9b061d3d-ed30-4a8b-8843-ff3111dcb68c",
+                            ConcurrencyStamp = "925e68d7-1214-43f9-86db-78dfd3ced5e7",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
                             Id = "technician",
-                            ConcurrencyStamp = "fb9df298-e812-425c-94ec-f7bf1c4fadca",
+                            ConcurrencyStamp = "57b0a978-3cfa-4477-9643-7d6028a7f91f",
                             Name = "Technician",
                             NormalizedName = "TECHNICIAN"
                         });
@@ -602,19 +615,17 @@ namespace FinalDern_Support.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FinalDern_Support.Models.Job", "Job")
-                        .WithOne()
-                        .HasForeignKey("FinalDern_Support.Models.Feedback", "JobID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Customer");
-
-                    b.Navigation("Job");
                 });
 
             modelBuilder.Entity("FinalDern_Support.Models.Job", b =>
                 {
+                    b.HasOne("FinalDern_Support.Models.Feedback", "Feedback")
+                        .WithOne("Job")
+                        .HasForeignKey("FinalDern_Support.Models.Job", "FeedbackID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("FinalDern_Support.Models.Quote", "Quote")
                         .WithOne("Job")
                         .HasForeignKey("FinalDern_Support.Models.Job", "QuoteID")
@@ -626,6 +637,8 @@ namespace FinalDern_Support.Migrations
                         .HasForeignKey("TechID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Feedback");
 
                     b.Navigation("Quote");
 
@@ -676,7 +689,7 @@ namespace FinalDern_Support.Migrations
             modelBuilder.Entity("FinalDern_Support.Models.Report", b =>
                 {
                     b.HasOne("FinalDern_Support.Models.Job", "Job")
-                        .WithOne()
+                        .WithOne("Report")
                         .HasForeignKey("FinalDern_Support.Models.Report", "JobID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -700,7 +713,15 @@ namespace FinalDern_Support.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("FinalDern_Support.Models.Job", "Job")
+                        .WithOne("Request")
+                        .HasForeignKey("FinalDern_Support.Models.Request", "JobID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Job");
                 });
 
             modelBuilder.Entity("FinalDern_Support.Models.Technician", b =>
@@ -789,9 +810,21 @@ namespace FinalDern_Support.Migrations
                     b.Navigation("Requests");
                 });
 
+            modelBuilder.Entity("FinalDern_Support.Models.Feedback", b =>
+                {
+                    b.Navigation("Job")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FinalDern_Support.Models.Job", b =>
                 {
                     b.Navigation("JobSpareParts");
+
+                    b.Navigation("Report")
+                        .IsRequired();
+
+                    b.Navigation("Request")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FinalDern_Support.Models.Quote", b =>

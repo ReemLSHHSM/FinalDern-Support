@@ -9,12 +9,14 @@
         public string Location { get; set; }
         public int Quantity { get; set; }
         public string Status { get; set; }
+        public bool IsTaken { get; set; }
+       // public int? JobID { get; set; }
 
         // Navigation property
-       public Customer Customer { get; set; }
+        public Customer Customer { get; set; }
 
         //// One-to-one relationships
         public Quote Quote { get; set; }
-        public Job Job { get; set; }
+       // public Job Job { get; set; }
     }
 }

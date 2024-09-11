@@ -59,7 +59,7 @@ namespace FinalDern_Support.Data
             // Feedback -> Job (One-to-One)
             modelBuilder.Entity<Feedback>()
                 .HasOne(f => f.Job)
-                .WithOne(x => x.Feedback)
+                .WithOne()
                 .HasForeignKey<Feedback>(f => f.JobID)
                 .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
 
@@ -78,18 +78,18 @@ namespace FinalDern_Support.Data
                 .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
 
             // Job -> Report (One-to-One, optional)
-            modelBuilder.Entity<Job>()
-                .HasOne(j => j.Report)
-                .WithOne(r => r.Job)
-                .HasForeignKey<Job>(j => j.ReportID)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
+                 modelBuilder.Entity<Report>()
+                .HasOne(r => r.Job)
+                .WithOne()  // No navigation property on Job side
+                .HasForeignKey<Report>(r => r.JobID)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Job -> Feedback (One-to-One, optional)
-            modelBuilder.Entity<Job>()
-                .HasOne(j => j.Feedback)
-                .WithOne(f => f.Job)
-                .HasForeignKey<Job>(j => j.FeedbackID)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
+            //modelBuilder.Entity<Job>()
+            //    .HasOne(j => j.Feedback)
+            //    .WithOne(f => f.Job)
+            //    .HasForeignKey<Job>(j => j.FeedbackID)
+            //    .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
 
             // JobSpareParts -> Job (Many-to-One)
             modelBuilder.Entity<JobSpareParts>()
@@ -126,12 +126,12 @@ namespace FinalDern_Support.Data
                 .HasForeignKey(r => r.TechnicianID)
                 .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
 
-            // Report -> Job (One-to-One)
-            modelBuilder.Entity<Report>()
-                .HasOne(r => r.Job)
-                .WithOne(j => j.Report)
-                .HasForeignKey<Report>(r => r.JobID)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
+            //// Report -> Job (One-to-One)
+            //modelBuilder.Entity<Report>()
+            //    .HasOne(r => r.Job)
+            //    .WithOne(j => j.Report)
+            //    .HasForeignKey<Report>(r => r.JobID)
+            //    .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
 
             // Request -> Customer (Many-to-One)
             modelBuilder.Entity<Request>()
@@ -139,6 +139,12 @@ namespace FinalDern_Support.Data
                 .WithMany(c => c.Requests)
                 .HasForeignKey(r => r.CustomerID)
                 .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
+                                                     // Add this configuration if it's not already present
+         //   modelBuilder.Entity<Request>()
+         //.HasOne(r => r.Job)
+         //.WithOne(j => j.Request)
+         //.HasForeignKey<Request>(r => r.JobID)
+         //.OnDelete(DeleteBehavior.Restrict);
 
             // Seed roles
             SeedRole(modelBuilder, "Admin");

@@ -30,7 +30,9 @@ namespace FinalDern_Support
             builder.Services.AddScoped<Jwt_TokenServices>();
             builder.Services.AddTransient<IUser, IdentityUserServices>();
             builder.Services.AddTransient<ICustomer, CustomerService>();
-           // builder.Services.AddTransient<IHome, HomeServices>();
+            builder.Services.AddScoped<IAdmin, AdminService>();
+
+            // builder.Services.AddTransient<IHome, HomeServices>();
 
             // Swagger Configuration
             builder.Services.AddSwaggerGen(options =>

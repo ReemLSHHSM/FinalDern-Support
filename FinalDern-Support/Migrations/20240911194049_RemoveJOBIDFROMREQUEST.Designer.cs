@@ -4,6 +4,7 @@ using FinalDern_Support.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinalDern_Support.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240911194049_RemoveJOBIDFROMREQUEST")]
+    partial class RemoveJOBIDFROMREQUEST
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -163,9 +166,6 @@ namespace FinalDern_Support.Migrations
 
                     b.HasIndex("CustomerID");
 
-                    b.HasIndex("JobID")
-                        .IsUnique();
-
                     b.ToTable("Feedbacks");
                 });
 
@@ -177,10 +177,19 @@ namespace FinalDern_Support.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ID"));
 
+                    b.Property<int>("FeedbackID")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsComplete")
                         .HasColumnType("bit");
 
                     b.Property<int>("QuoteID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ReportID")
+                        .HasColumnType("int");
+
+                    b.Property<int>("RequestID")
                         .HasColumnType("int");
 
                     b.Property<int>("TechID")
@@ -188,8 +197,13 @@ namespace FinalDern_Support.Migrations
 
                     b.HasKey("ID");
 
+                    b.HasIndex("FeedbackID")
+                        .IsUnique();
+
                     b.HasIndex("QuoteID")
                         .IsUnique();
+
+                    b.HasIndex("RequestID");
 
                     b.HasIndex("TechID");
 
@@ -446,21 +460,21 @@ namespace FinalDern_Support.Migrations
                         new
                         {
                             Id = "admin",
-                            ConcurrencyStamp = "468d433f-61dd-41ca-ac83-828280c9ebe1",
+                            ConcurrencyStamp = "1946dbda-29cf-4e30-8218-61f564b988b2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "customer",
-                            ConcurrencyStamp = "9b061d3d-ed30-4a8b-8843-ff3111dcb68c",
+                            ConcurrencyStamp = "82a1bfca-22e0-4f4a-a8fe-14725424706f",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
                             Id = "technician",
-                            ConcurrencyStamp = "fb9df298-e812-425c-94ec-f7bf1c4fadca",
+                            ConcurrencyStamp = "6a7fe620-10fb-46e8-a542-0013666ecc58",
                             Name = "Technician",
                             NormalizedName = "TECHNICIAN"
                         });
@@ -602,23 +616,27 @@ namespace FinalDern_Support.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("FinalDern_Support.Models.Job", "Job")
-                        .WithOne()
-                        .HasForeignKey("FinalDern_Support.Models.Feedback", "JobID")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Customer");
-
-                    b.Navigation("Job");
                 });
 
             modelBuilder.Entity("FinalDern_Support.Models.Job", b =>
                 {
+                    b.HasOne("FinalDern_Support.Models.Feedback", "Feedback")
+                        .WithOne("Job")
+                        .HasForeignKey("FinalDern_Support.Models.Job", "FeedbackID")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("FinalDern_Support.Models.Quote", "Quote")
                         .WithOne("Job")
                         .HasForeignKey("FinalDern_Support.Models.Job", "QuoteID")
                         .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("FinalDern_Support.Models.Request", "Request")
+                        .WithMany()
+                        .HasForeignKey("RequestID")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("FinalDern_Support.Models.Technician", "Technician")
@@ -627,7 +645,11 @@ namespace FinalDern_Support.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.Navigation("Feedback");
+
                     b.Navigation("Quote");
+
+                    b.Navigation("Request");
 
                     b.Navigation("Technician");
                 });
@@ -676,7 +698,7 @@ namespace FinalDern_Support.Migrations
             modelBuilder.Entity("FinalDern_Support.Models.Report", b =>
                 {
                     b.HasOne("FinalDern_Support.Models.Job", "Job")
-                        .WithOne()
+                        .WithOne("Report")
                         .HasForeignKey("FinalDern_Support.Models.Report", "JobID")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -789,9 +811,18 @@ namespace FinalDern_Support.Migrations
                     b.Navigation("Requests");
                 });
 
+            modelBuilder.Entity("FinalDern_Support.Models.Feedback", b =>
+                {
+                    b.Navigation("Job")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("FinalDern_Support.Models.Job", b =>
                 {
                     b.Navigation("JobSpareParts");
+
+                    b.Navigation("Report")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("FinalDern_Support.Models.Quote", b =>
