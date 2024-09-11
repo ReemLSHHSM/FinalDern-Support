@@ -70,7 +70,7 @@ namespace FinalDern_Support.Repositories.Services
                     UserName = registerDto.Username,
                     Email = registerDto.Email,
                     PhoneNumber = registerDto.Phone,
-                    type= registerDto.Type,
+                    type= "Customer",
              
 
                 };

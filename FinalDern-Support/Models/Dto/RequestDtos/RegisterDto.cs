@@ -7,7 +7,7 @@
         public string Password { get; set; }
         public string ConfirmPassword { get; set; }
         public string Phone { get; set; }
-        public string Type { get; set; }
+     //   public string Type { get; set; }
         public string Location { get; set; }
         public string City { get; set; }
         public bool ISBussiness { get; set; }

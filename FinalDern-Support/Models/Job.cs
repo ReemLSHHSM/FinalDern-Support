@@ -19,7 +19,7 @@ namespace FinalDern_Support.Models
 
         public Report Report { get; set; }
         public Feedback Feedback { get; set; }
-
+        public Request Request { get; set; }
         public ICollection<JobSpareParts> JobSpareParts { get; set; }
     }
 

@@ -9,6 +9,7 @@
             public TimeSpan StartAt { get; set; }
             public DateTime EndAt { get; set; }
             public string Priority { get; set; }
+            public string Status { get; set; }
 
         // Navigation properties
         public Request Request { get; set; }

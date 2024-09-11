@@ -139,6 +139,12 @@ namespace FinalDern_Support.Data
                 .WithMany(c => c.Requests)
                 .HasForeignKey(r => r.CustomerID)
                 .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
+                                                     // Add this configuration if it's not already present
+            modelBuilder.Entity<Request>()
+         .HasOne(r => r.Job)
+         .WithOne(j => j.Request)
+         .HasForeignKey<Request>(r => r.JobID)
+         .OnDelete(DeleteBehavior.Restrict);
 
             // Seed roles
             SeedRole(modelBuilder, "Admin");

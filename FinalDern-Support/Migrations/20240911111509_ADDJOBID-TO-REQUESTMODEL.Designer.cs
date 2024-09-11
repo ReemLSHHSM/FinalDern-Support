@@ -4,6 +4,7 @@ using FinalDern_Support.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinalDern_Support.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240911111509_ADDJOBID-TO-REQUESTMODEL")]
+    partial class ADDJOBIDTOREQUESTMODEL
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -275,10 +278,6 @@ namespace FinalDern_Support.Migrations
                     b.Property<TimeSpan>("StartAt")
                         .HasColumnType("time");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("ID");
 
                     b.HasIndex("RequestID")
@@ -343,8 +342,7 @@ namespace FinalDern_Support.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("JobID")
-                        .IsRequired()
+                    b.Property<int>("JobID")
                         .HasColumnType("int");
 
                     b.Property<string>("Location")
@@ -366,8 +364,7 @@ namespace FinalDern_Support.Migrations
 
                     b.HasIndex("CustomerID");
 
-                    b.HasIndex("JobID")
-                        .IsUnique();
+                    b.HasIndex("JobID");
 
                     b.ToTable("Requests");
                 });
@@ -456,21 +453,21 @@ namespace FinalDern_Support.Migrations
                         new
                         {
                             Id = "admin",
-                            ConcurrencyStamp = "0e48161d-7fdb-4cef-bef8-b07d98912698",
+                            ConcurrencyStamp = "f3c50b2e-4fe9-47be-a30b-31837ee3dc68",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "customer",
-                            ConcurrencyStamp = "925e68d7-1214-43f9-86db-78dfd3ced5e7",
+                            ConcurrencyStamp = "018816e7-0d38-4e80-afb0-cc88148d5c55",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
                             Id = "technician",
-                            ConcurrencyStamp = "57b0a978-3cfa-4477-9643-7d6028a7f91f",
+                            ConcurrencyStamp = "270c9acf-4ab1-443b-bccb-6283c55da490",
                             Name = "Technician",
                             NormalizedName = "TECHNICIAN"
                         });
@@ -711,9 +708,9 @@ namespace FinalDern_Support.Migrations
                         .IsRequired();
 
                     b.HasOne("FinalDern_Support.Models.Job", "Job")
-                        .WithOne("Request")
-                        .HasForeignKey("FinalDern_Support.Models.Request", "JobID")
-                        .OnDelete(DeleteBehavior.Restrict)
+                        .WithMany()
+                        .HasForeignKey("JobID")
+                        .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Customer");
@@ -818,9 +815,6 @@ namespace FinalDern_Support.Migrations
                     b.Navigation("JobSpareParts");
 
                     b.Navigation("Report")
-                        .IsRequired();
-
-                    b.Navigation("Request")
                         .IsRequired();
                 });
 

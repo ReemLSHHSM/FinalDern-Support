@@ -4,6 +4,7 @@ using FinalDern_Support.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinalDern_Support.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240911115904_EDITJObrelationinSQLSERVER")]
+    partial class EDITJObrelationinSQLSERVER
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -275,10 +278,6 @@ namespace FinalDern_Support.Migrations
                     b.Property<TimeSpan>("StartAt")
                         .HasColumnType("time");
 
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
                     b.HasKey("ID");
 
                     b.HasIndex("RequestID")
@@ -456,21 +455,21 @@ namespace FinalDern_Support.Migrations
                         new
                         {
                             Id = "admin",
-                            ConcurrencyStamp = "0e48161d-7fdb-4cef-bef8-b07d98912698",
+                            ConcurrencyStamp = "6b867039-33b1-476c-9714-23e3f86cec95",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "customer",
-                            ConcurrencyStamp = "925e68d7-1214-43f9-86db-78dfd3ced5e7",
+                            ConcurrencyStamp = "e652032d-2310-4059-ba85-eb78cf4db55a",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
                             Id = "technician",
-                            ConcurrencyStamp = "57b0a978-3cfa-4477-9643-7d6028a7f91f",
+                            ConcurrencyStamp = "923d5f90-f76f-4d68-b4f0-6b32e51c0c9f",
                             Name = "Technician",
                             NormalizedName = "TECHNICIAN"
                         });
