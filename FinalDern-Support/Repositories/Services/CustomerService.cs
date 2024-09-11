@@ -28,6 +28,7 @@ namespace FinalDern_Support.Repositories.Services
             return customer;
         }
 
+        //Get All Pending Quotes
         public async Task<object> GetAllQuotes(ClaimsPrincipal principal)
         {
             if (principal == null)
@@ -61,10 +62,10 @@ namespace FinalDern_Support.Repositories.Services
                 };
             }
 
-            var cus = await _context.Customers
-                .FirstOrDefaultAsync(x => x.UserID == user.Id);
+            var customer = await _context.Customers
+                .FirstOrDefaultAsync(c => c.UserID == user.Id);
 
-            if (cus == null)
+            if (customer == null)
             {
                 return new ResultDto
                 {
@@ -75,22 +76,22 @@ namespace FinalDern_Support.Repositories.Services
             }
 
             var quotes = await _context.Quotes
-         .Where(q => q.Request.CustomerID == cus.ID
-                     && q.Request.Status.ToLower() == "accepted"
-                     && q.Status.ToLower() == "pending")
-         .Select(q => new GetPendingQuotesDto
-         {
-             ID = q.ID,
-             Cost = q.Cost, 
-             StartAt = q.StartAt, 
-             EndAt = q.EndAt ,
-             Status = q.Status
-         })
-         .ToListAsync();
+                .Include(q => q.Request) // Include the related Request entity
+                .Where(q => q.Request.CustomerID == customer.ID
+                            && q.Request.Status.ToLower() == "accepted"
+                            && q.Status.ToLower() == "pending")
+                .Select(q => new GetPendingQuotesDto
+                {
+                    ID = q.ID,
+                    Cost = q.Cost,
+                    StartAt = q.StartAt,
+                    EndAt = q.EndAt,
+                    Status = q.Status
+                })
+                .ToListAsync();
 
             return quotes;
         }
-    
 
 
 
@@ -156,7 +157,8 @@ namespace FinalDern_Support.Repositories.Services
                 Quantity = requestSupportRequestDto.Quantity,
                 Location = requestSupportRequestDto.Location,
                 Status = "Pending",
-                CustomerID=cus.ID
+                CustomerID=cus.ID,
+                IsTaken=false
 
 
             };
@@ -182,7 +184,8 @@ namespace FinalDern_Support.Repositories.Services
 
 
         }
-        public async Task<ResultDto> UpdateQuoteStatusAsync(ClaimsPrincipal principal, string newStatus, int quoteID)
+        //Accept or Reject
+        public async Task<object> UpdateQuoteStatusAsync(ClaimsPrincipal principal, string newStatus, int quoteID)
         {
             if (principal == null)
             {
@@ -214,6 +217,7 @@ namespace FinalDern_Support.Repositories.Services
                     StatusCode = 403 // Forbidden
                 };
             }
+
 
             var customer = await _context.Customers.FirstOrDefaultAsync(c => c.UserID == user.Id);
             if (customer == null)
@@ -251,7 +255,7 @@ namespace FinalDern_Support.Repositories.Services
             }
 
             // Check if the quote is pending and the request is accepted
-            if (quote.Status != "Pending" || request.Status != "Accepted")
+            if (quote.Status.ToLower() != "pending" || request.Status.ToLower() != "accepted")
             {
                 return new ResultDto
                 {
@@ -275,9 +279,11 @@ namespace FinalDern_Support.Repositories.Services
             // If rejected, remove both the quote and the request
             if (newStatus.ToLower() == "rejected")
             {
-                _context.Quotes.Remove(quote);
-                _context.Requests.Remove(request);
+                request.Status = "Rejected";
                 await _context.SaveChangesAsync();
+                quote.Status = "Rejected";
+                await _context.SaveChangesAsync();
+                
 
                 return new ResultDto
                 {
@@ -294,10 +300,11 @@ namespace FinalDern_Support.Repositories.Services
             return new ResultDto
             {
                 Success = true,
-                Message = $"Quote Accepted",
+                Message = "Quote Accepted",
                 StatusCode = 200 // OK
             };
         }
+        //To give FeedBack
         public async Task<object> GetCompletedJobsAsync(ClaimsPrincipal claims)
         {
             if (claims == null)
@@ -322,6 +329,7 @@ namespace FinalDern_Support.Repositories.Services
                 };
             }
 
+            // Ensure the user is a "Customer"
             if (!await _userManager.IsInRoleAsync(user, "Customer"))
             {
                 return new ResultDto
@@ -332,21 +340,33 @@ namespace FinalDern_Support.Repositories.Services
                 };
             }
 
-            // Fetch completed jobs with related request title
+            var customer = await _context.Customers.FirstOrDefaultAsync(c => c.UserID == user.Id);
+            if (customer == null)
+            {
+                return new ResultDto
+                {
+                    Success = false,
+                    Message = "Customer not found.",
+                    StatusCode = 404 // Not Found
+                };
+            }
+
+           
             var completedJobs = await _context.Jobs
-                .Where(j => j.IsComplete) // Filter jobs by 'completed' status
-                .Include(j => j.Quote) // Include related Quote
-                .ThenInclude(q => q.Request) // Include related Request through Quote
+                .Where(j => j.IsComplete
+                            && j.Quote.Request.CustomerID == customer.ID)
+                .Include(j => j.Quote) 
+                .ThenInclude(q => q.Request) 
                 .Select(j => new CompletedJobDto
                 {
                     ID = j.ID,
-                    Title = j.Quote.Request.Title, // Access the request title
+                    Title = j.Quote.Request.Title,
                     Description = j.Quote.Request.Description,
                     IsComplete = j.IsComplete
                 })
-                .ToListAsync(); // Ensure async execution
+                .ToListAsync(); 
 
-            // Check if no jobs are found
+          
             if (completedJobs == null || !completedJobs.Any())
             {
                 return new ResultDto
@@ -359,6 +379,7 @@ namespace FinalDern_Support.Repositories.Services
 
             return completedJobs;
         }
+
 
         public async Task<object>PostFeedBack(ClaimsPrincipal principal, int JobID, PostFeedBackrequest postFeedBackrequest)
         {
@@ -403,6 +424,26 @@ namespace FinalDern_Support.Repositories.Services
                     StatusCode = 404 // Not Found
                 };
             }
+            var job = _context.Jobs.FirstOrDefault(j => j.ID == JobID);
+            if (job == null)
+            {
+                return new ResultDto
+                {
+                    Success = false,
+                    Message = "Job not found.",
+                    StatusCode = 404 // Not Found
+                };
+            }
+
+            if (!job.IsComplete)
+            {
+                return new ResultDto
+                {
+                    Success = false,
+                    Message = "Job is not Completed yet.",
+                    StatusCode = 400 // Not Found
+                };
+            }
 
             _context.Feedbacks.AddAsync(new Feedback
             {
@@ -423,6 +464,8 @@ namespace FinalDern_Support.Repositories.Services
             };
         }
 
+
+        
 
     }
 }

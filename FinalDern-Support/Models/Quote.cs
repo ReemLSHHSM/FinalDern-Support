@@ -4,7 +4,7 @@
     {
         
             public int ID { get; set; }
-            public int RequestID { get; set; }   // Foreign key for Request
+            public int? RequestID { get; set; }   // Foreign key for Request
             public double Cost { get; set; }
             public TimeSpan StartAt { get; set; }
             public DateTime EndAt { get; set; }

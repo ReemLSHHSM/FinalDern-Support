@@ -22,7 +22,7 @@ namespace FinalDern_Support.Controllers
 
         // POST: api/SupportRequest
         [HttpPost]
-        [Route("Submit")]
+        [Route("SubmitSupportRequest")]
         public async Task<IActionResult> SubmitSupportRequest([FromBody] requestSupportRequestDto requestDto)
         {
 
@@ -45,10 +45,10 @@ namespace FinalDern_Support.Controllers
             // If the result is not a ResultDto, assume it's a list of quotes and return it
             return Ok(result);
         }
-        [HttpPut("HandleQuote")]
-        public async Task<IActionResult> HandleQuote(string newStatus, int qouteID)
+        [HttpPut("HandleQuote/{qouteID}")]
+        public async Task<IActionResult> HandleQuote([FromBody] string newStatus, int qouteID)
         {
-            var result=_customer.UpdateQuoteStatusAsync(User, newStatus, qouteID);
+            var result=await _customer.UpdateQuoteStatusAsync(User, newStatus, qouteID);
 
             return  Ok(result);
         }
@@ -56,15 +56,15 @@ namespace FinalDern_Support.Controllers
         [HttpGet("GetAllJobs")]
         public async Task<IActionResult> GetAllJobs()
         {
-            var result= _customer.GetCompletedJobsAsync(User);
+            var result=await  _customer.GetCompletedJobsAsync(User);
             return Ok(result);
 
         }
 
-        [HttpPost("SubmitFeedBack")]
+        [HttpPost("SubmitFeedBack/{JobID}")]
         public async Task<IActionResult> SubmitFeedBack( int JobID, PostFeedBackrequest postFeedBackrequest)
         {
-            var result=_customer.PostFeedBack(User, JobID, postFeedBackrequest);
+            var result=await _customer.PostFeedBack(User, JobID, postFeedBackrequest);
             return Ok(result);
         }
 

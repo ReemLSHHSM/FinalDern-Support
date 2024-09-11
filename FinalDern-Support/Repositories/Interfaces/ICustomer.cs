@@ -10,7 +10,7 @@ namespace FinalDern_Support.Repositories.Interfaces
        public Task<Customer> AddCustomer(Customer customer);
        public Task<object> SubmitSupportRequest(ClaimsPrincipal principal,requestSupportRequestDto requestSupportRequestDto);
         public Task<object> GetAllQuotes(ClaimsPrincipal principal);
-        public Task<ResultDto> UpdateQuoteStatusAsync(ClaimsPrincipal principal, string newStatus, int qouteID);
+        public Task<object> UpdateQuoteStatusAsync(ClaimsPrincipal principal, string newStatus, int qouteID);
         public Task<object> GetCompletedJobsAsync(ClaimsPrincipal claims);
         public Task<object> PostFeedBack(ClaimsPrincipal principal, int JobID, PostFeedBackrequest postFeedBackrequest);
     }
