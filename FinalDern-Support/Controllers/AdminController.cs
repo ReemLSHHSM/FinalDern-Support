@@ -6,6 +6,8 @@ using FinalDern_Support.Repositories.Interfaces;
 
 namespace FinalDern_Support.Controllers
 {
+    [ApiController]
+    [Route("api/[controller]")]
     public class AdminController:ControllerBase
     {
         private readonly IAdmin _admin;
