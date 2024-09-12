@@ -723,5 +723,197 @@ namespace FinalDern_Support.Repositories.Services
                 StatusCode = 200
             };
         }
+
+
+        //SpareParts Corner
+
+        //public async Task<object> AddSpareParts(ClaimsPrincipal principal,AddSpareParts addSpareParts)
+
+        //{
+        //    if (principal == null)
+        //    {
+        //        return new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "ClaimsPrincipal cannot be null.",
+        //            StatusCode = 400 // Bad Request
+        //        };
+        //    }
+
+        //    var user = await _userManager.GetUserAsync(principal);
+        //    if (user == null)
+        //    {
+        //        return new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "User not found.",
+        //            StatusCode = 404 // Not Found
+        //        };
+        //    }
+
+        //    if (!await _userManager.IsInRoleAsync(user, "Admin"))
+        //    {
+        //        return new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "Access denied.",
+        //            StatusCode = 403 // Forbidden
+        //        };
+        //    }
+
+        //    var spareparts = new SparePart
+        //    {
+        //        Name = addSpareParts.Name,
+        //        Description = addSpareParts.Description,
+        //        Quantity = addSpareParts.Quantity,
+        //        Price = addSpareParts.Price
+        //    };
+
+        //    _context.SpareParts.AddAsync(spareparts);
+        //    _context.SaveChanges();
+
+        //    return new ResultDto
+        //    {
+        //        Success=true,
+        //        Message="Parts Added Successfully",
+        //        StatusCode=200
+        //    };
+        //}
+
+        //public async Task<object> EditSpareParts(ClaimsPrincipal principal,AddSpareParts addSpareParts,int partID)
+        //{
+        //    if (principal == null)
+        //    {
+        //        return new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "ClaimsPrincipal cannot be null.",
+        //            StatusCode = 400 // Bad Request
+        //        };
+        //    }
+
+        //    var user = await _userManager.GetUserAsync(principal);
+        //    if (user == null)
+        //    {
+        //        return new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "User not found.",
+        //            StatusCode = 404 // Not Found
+        //        };
+        //    }
+
+        //    if (!await _userManager.IsInRoleAsync(user, "Admin"))
+        //    {
+        //        return new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "Access denied.",
+        //            StatusCode = 403 // Forbidden
+        //        };
+        //    }
+        //    var spareParts=_context.SpareParts.FirstOrDefault(x=>x.ID==partID);
+        //    if (spareParts == null)
+        //    {
+        //        return new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "SparePart Doesn't Exist",
+        //            StatusCode=200
+        //        };
+        //    }
+
+        //    if(addSpareParts.Name.ToLower()=="string" || string.IsNullOrEmpty(addSpareParts.Name))
+        //    {
+        //        spareParts.Name = spareParts.Name;
+        //        _context.SaveChanges();
+        //    }
+        //    else
+        //    {
+        //        spareParts.Name=addSpareParts.Name;
+        //        _context.SaveChanges();
+        //    }
+
+        //    if (addSpareParts.Description.ToLower() == "string" || string.IsNullOrEmpty(addSpareParts.Description))
+        //    {
+        //        spareParts.Description = spareParts.Description;
+        //        _context.SaveChanges();
+        //    }
+        //    else
+        //    {
+        //        spareParts.Description = addSpareParts.Description;
+        //        _context.SaveChanges();
+        //    }
+
+          
+        //        spareParts.Price = addSpareParts.Price;
+        //        _context.SaveChanges();
+            
+           
+        //        spareParts.Quantity = addSpareParts.Quantity;
+        //        _context.SaveChanges();
+            
+
+        //    return new ResultDto
+        //    {
+        //        Success = true,
+        //        Message = "SpareParts Edited Successfully",
+        //        StatusCode = 200
+        //    };
+
+        //}
+        //public async Task<object> RemoveSpareParts(ClaimsPrincipal principal,int partID)
+        //{
+        //    if (principal == null)
+        //    {
+        //        return new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "ClaimsPrincipal cannot be null.",
+        //            StatusCode = 400 // Bad Request
+        //        };
+        //    }
+
+        //    var user = await _userManager.GetUserAsync(principal);
+        //    if (user == null)
+        //    {
+        //        return new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "User not found.",
+        //            StatusCode = 404 // Not Found
+        //        };
+        //    }
+
+        //    if (!await _userManager.IsInRoleAsync(user, "Admin"))
+        //    {
+        //        return new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "Access denied.",
+        //            StatusCode = 403 // Forbidden
+        //        };
+        //    }
+        //    var spareParts = _context.SpareParts.FirstOrDefault(x => x.ID == partID);
+        //    if (spareParts == null)
+        //    {
+        //        return new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "SparePart Doesn't Exist",
+        //            StatusCode = 200
+        //        };
+        //    }
+
+        //    _context.SpareParts.Remove(spareParts);
+        //    _context.SaveChanges();
+
+        //    return new ResultDto
+        //    {
+        //        Success = true,
+        //        Message = "SpareParts Removed Successfully",
+        //        StatusCode = 200
+        //    };
+      //  }
     }
 }

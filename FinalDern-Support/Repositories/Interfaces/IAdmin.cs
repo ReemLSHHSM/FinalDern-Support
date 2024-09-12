@@ -16,8 +16,12 @@ namespace FinalDern_Support.Repositories.Interfaces
         public Task<object> GetReportsAnalyticsAsync(ClaimsPrincipal principal);
         public Task<object> PostArticle(ClaimsPrincipal principal, Knowledge_BaseDto knowledge_BaseDto);
         public Task<object> EditArticle(ClaimsPrincipal principal, int articleID, Knowledge_BaseDto knowledge_BaseDto);
-        public Task<object> DeleteArticle(ClaimsPrincipal principal, int articleID);
 
+        //SpareParts Corner
+
+       // public Task<object> DeleteArticle(ClaimsPrincipal principal, int articleID);
+     //   public  Task<object> AddSpareParts(ClaimsPrincipal principal, AddSpareParts addSpareParts);
+       // public Task<object> EditSpareParts(ClaimsPrincipal principal, AddSpareParts addSpareParts, int partID);
 
 
         }

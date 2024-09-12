@@ -94,11 +94,28 @@ namespace FinalDern_Support.Controllers
             return Ok(result);
         }
 
-        [HttpDelete("DeleteArticle/{id}")]
-        public async Task<IActionResult> DeleteArticle(int id)
-        {
-            var result=await _admin.DeleteArticle(User, id);
-            return Ok(result);
-        }
+
+        //SpareParts Corner
+
+        //[HttpDelete("DeleteArticle/{id}")]
+        //public async Task<IActionResult> DeleteArticle(int id)
+        //{
+        //    var result=await _admin.DeleteArticle(User, id);
+        //    return Ok(result);
+        //}
+
+        //[HttpPost("AddSpareParts")]
+        //public async Task<IActionResult> AddSpareParts(AddSpareParts addSpareParts)
+        //{
+        //    var result=await _admin.AddSpareParts(User, addSpareParts);
+        //    return Ok(result);
+        //}
+
+        //[HttpPut("EditSpareParts/{id}")]
+        //public async Task<IActionResult> EditSpareParts(AddSpareParts addSpareParts, int id)
+        //{
+        //    var result = _admin.EditSpareParts(User, addSpareParts, id);
+        //    return Ok(result);
+        //}
     }
 }
