@@ -46,7 +46,7 @@ namespace FinalDern_Support.Repositories.Services
                 {
                     Id = user.Id,
                     UserName = user.UserName,
-                    Token = await _jwtTokenService.GenerateToken(user, System.TimeSpan.FromDays(7))
+                    Token = await _jwtTokenService.GenerateToken(user, System.TimeSpan.FromDays(60))
                 };
             }
 

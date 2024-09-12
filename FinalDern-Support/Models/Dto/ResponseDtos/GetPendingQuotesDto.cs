@@ -4,7 +4,7 @@
     {
         public int ID { get; set; }
         public double Cost { get; set; }
-        public TimeSpan StartAt { get; set; }
+        public DateTime StartAt { get; set; }
         public DateTime EndAt { get; set; }
         public string Status { get; set; }
     }

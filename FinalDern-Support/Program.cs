@@ -32,7 +32,7 @@ namespace FinalDern_Support
             builder.Services.AddTransient<ICustomer, CustomerService>();
             builder.Services.AddScoped<IAdmin, AdminService>();
 
-            // builder.Services.AddTransient<IHome, HomeServices>();
+            
 
             // Swagger Configuration
             builder.Services.AddSwaggerGen(options =>
