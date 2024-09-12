@@ -9,6 +9,7 @@
         public string Location { get; set; }
         public int Quantity { get; set; }
         public string Status { get; set; }
+
         public bool IsTaken { get; set; }
        // public int? JobID { get; set; }
 

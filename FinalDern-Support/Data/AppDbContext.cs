@@ -1,14 +1,28 @@
 ﻿using FinalDern_Support.Models;
+using FinalDern_Support.Models.Dto.ResponseDtos;
+using FinalDern_Support.Repositories.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
+using System.Reflection.Emit;
 
 namespace FinalDern_Support.Data
 {
+
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
+        private UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly AppDbContext _context;
+        //Inject IWT Service 
+        private Jwt_TokenServices _jwtTokenService;
+
         public AppDbContext(DbContextOptions options) : base(options)
-        { }
+        { 
+        
+        
+        }
         public DbSet<Admin> Admins { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Feedback> Feedbacks { get; set; }
@@ -150,6 +164,43 @@ namespace FinalDern_Support.Data
             SeedRole(modelBuilder, "Admin");
             SeedRole(modelBuilder, "Customer");
             SeedRole(modelBuilder, "Technician");
+
+
+            string adminUserId = Guid.NewGuid().ToString();
+            var hasher = new PasswordHasher<ApplicationUser>();
+
+            var adminUser = new ApplicationUser
+            {
+                Id = adminUserId,
+                UserName = "admin",
+                NormalizedUserName = "ADMIN",
+                Email = "admin@example.com",
+                NormalizedEmail = "ADMIN@EXAMPLE.COM",
+                EmailConfirmed = true,
+                PhoneNumber = "1234567890",
+                PhoneNumberConfirmed = true,
+                SecurityStamp = Guid.NewGuid().ToString("D"),
+                type="Admin"
+            };
+
+            // Hash the admin password and set it
+            adminUser.PasswordHash = hasher.HashPassword(adminUser, "Admin@123");
+
+            modelBuilder.Entity<ApplicationUser>().HasData(adminUser);
+
+            // Seed the Admin Role for the User
+            modelBuilder.Entity<IdentityUserRole<string>>().HasData(new IdentityUserRole<string>
+            {
+                RoleId = "Admin",
+                UserId = adminUserId
+            });
+
+            // Seed the Admin entity
+            modelBuilder.Entity<Admin>().HasData(new Admin
+            {
+                ID = 1,
+                UserID = adminUserId
+            });
         }
 
 
@@ -180,6 +231,13 @@ namespace FinalDern_Support.Data
             }
         }
 
+      
+
     }
+
+
+
+
+    
 
 }

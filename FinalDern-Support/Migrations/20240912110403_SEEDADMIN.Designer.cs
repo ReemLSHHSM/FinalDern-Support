@@ -4,6 +4,7 @@ using FinalDern_Support.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinalDern_Support.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240912110403_SEEDADMIN")]
+    partial class SEEDADMIN
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +48,7 @@ namespace FinalDern_Support.Migrations
                         new
                         {
                             ID = 1,
-                            UserID = "d6d47f43-1bca-444b-ab80-78c68f7a1276"
+                            UserID = "ad07ccdc-3359-4b35-bf53-91c81568b275"
                         });
                 });
 
@@ -120,18 +123,18 @@ namespace FinalDern_Support.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "d6d47f43-1bca-444b-ab80-78c68f7a1276",
+                            Id = "ad07ccdc-3359-4b35-bf53-91c81568b275",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "c8f4dc05-0ca0-47d9-95fa-f0347c21c29a",
+                            ConcurrencyStamp = "d9d2914a-de03-4c5f-8437-ec0a722d0f49",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEER6+bbszw30unXQiobdFEZ65kU/O9f9MCUJnvQvPJIuQeFxfNJexMHJKx66NVdsHw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHM7Nk1XcG9xHmKw+tYOiajIVWry2RUcVsaHg10eEn+LXt751J8Sg0dCt9XWTDlTtw==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "eb9d34f7-d8ea-44aa-badc-c7b26368a295",
+                            SecurityStamp = "4793d967-8370-46f2-8723-297fef74fc63",
                             TwoFactorEnabled = false,
                             UserName = "admin",
                             type = "Admin"
@@ -294,8 +297,8 @@ namespace FinalDern_Support.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<DateTime>("StartAt")
-                        .HasColumnType("datetime2");
+                    b.Property<TimeSpan>("StartAt")
+                        .HasColumnType("time");
 
                     b.Property<string>("Status")
                         .IsRequired()
@@ -474,21 +477,21 @@ namespace FinalDern_Support.Migrations
                         new
                         {
                             Id = "admin",
-                            ConcurrencyStamp = "5d9e2116-57c7-4641-9aa5-9d48ea9d56f6",
+                            ConcurrencyStamp = "d05eb0f7-c1c0-4f6f-af3d-30ecfeee4e8f",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "customer",
-                            ConcurrencyStamp = "e7526a50-cae3-46ad-9672-6745bea0a7ef",
+                            ConcurrencyStamp = "8aa4d161-4766-41cc-8315-aa3be7d31b82",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
                             Id = "technician",
-                            ConcurrencyStamp = "57f49c1c-d0cf-4b8d-bb35-4dfb85b87233",
+                            ConcurrencyStamp = "7d7e596d-42c4-49c1-b507-07158db397aa",
                             Name = "Technician",
                             NormalizedName = "TECHNICIAN"
                         });
@@ -583,7 +586,7 @@ namespace FinalDern_Support.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "d6d47f43-1bca-444b-ab80-78c68f7a1276",
+                            UserId = "ad07ccdc-3359-4b35-bf53-91c81568b275",
                             RoleId = "Admin"
                         });
                 });
