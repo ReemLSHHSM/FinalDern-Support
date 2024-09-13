@@ -23,64 +23,64 @@ namespace FinalDern_Support.Controllers
             _userManager = userManager;
         }
 
-        [Authorize(Roles = "Admin")]
-        [HttpDelete("RemoveSpareParts/{partID}")]
-        public async Task<ActionResult<object>> RemoveSpareParts(int partID)
-        {
-            var principal = User; // Get the ClaimsPrincipal from the current HttpContext
+        //[Authorize(Roles = "Admin")]
+        //[HttpDelete("RemoveSpareParts/{partID}")]
+        //public async Task<ActionResult<object>> RemoveSpareParts(int partID)
+        //{
+        //    var principal = User; // Get the ClaimsPrincipal from the current HttpContext
 
-            if (principal == null)
-            {
-                return BadRequest(new ResultDto
-                {
-                    Success = false,
-                    Message = "ClaimsPrincipal cannot be null.",
-                    StatusCode = 400 // Bad Request
-                });
-            }
+        //    if (principal == null)
+        //    {
+        //        return BadRequest(new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "ClaimsPrincipal cannot be null.",
+        //            StatusCode = 400 // Bad Request
+        //        });
+        //    }
 
-            var user = await _userManager.GetUserAsync(principal);
-            if (user == null)
-            {
-                return NotFound(new ResultDto
-                {
-                    Success = false,
-                    Message = "User not found.",
-                    StatusCode = 404 // Not Found
-                });
-            }
+        //    var user = await _userManager.GetUserAsync(principal);
+        //    if (user == null)
+        //    {
+        //        return NotFound(new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "User not found.",
+        //            StatusCode = 404 // Not Found
+        //        });
+        //    }
 
-            if (!await _userManager.IsInRoleAsync(user, "Admin"))
-            {
-                return new ResultDto
-                {
-                    Success = false,
-                    Message = "Access denied.",
-                    StatusCode = 403 // Forbidden
-                };
-            }
+        //    if (!await _userManager.IsInRoleAsync(user, "Admin"))
+        //    {
+        //        return new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "Access denied.",
+        //            StatusCode = 403 // Forbidden
+        //        };
+        //    }
 
-            var sparePart = _context.SpareParts.FirstOrDefault(x => x.ID == partID);
-            if (sparePart == null)
-            {
-                return NotFound(new ResultDto
-                {
-                    Success = false,
-                    Message = "SparePart Doesn't Exist",
-                    StatusCode = 404 // Not Found
-                });
-            }
+        //    var sparePart = _context.SpareParts.FirstOrDefault(x => x.ID == partID);
+        //    if (sparePart == null)
+        //    {
+        //        return NotFound(new ResultDto
+        //        {
+        //            Success = false,
+        //            Message = "SparePart Doesn't Exist",
+        //            StatusCode = 404 // Not Found
+        //        });
+        //    }
 
-            _context.SpareParts.Remove(sparePart);
-            await _context.SaveChangesAsync();
+        //    _context.SpareParts.Remove(sparePart);
+        //    await _context.SaveChangesAsync();
 
-            return Ok(new ResultDto
-            {
-                Success = true,
-                Message = "SpareParts Removed Successfully",
-                StatusCode = 200
-            });
-        }
+        //    return Ok(new ResultDto
+        //    {
+        //        Success = true,
+        //        Message = "SpareParts Removed Successfully",
+        //        StatusCode = 200
+        //    });
+        //}
 
         [Authorize(Roles = "Admin")]
         [HttpPut("EditSpareParts/{partID}")]

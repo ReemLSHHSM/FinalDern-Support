@@ -4,6 +4,6 @@
     {
         public string Title { get; set; }
         public string Content { get; set; }
-        public TimeSpan totalTime { get; set; }
+        public string totalTime { get; set; }
     }
 }

@@ -12,5 +12,6 @@ namespace FinalDern_Support.Repositories.Interfaces
         public Task<object> TakeSpareParts(ClaimsPrincipal principal, int partsID, int jobID);
         public Task<object> PostReport(ClaimsPrincipal principal, int jobID, ReportContent reportContent);
         public Task<object> FinishJob(ClaimsPrincipal principal, int jobID);
+        public Task<object> GetAllCompletedJobs(ClaimsPrincipal principal);
     }
 }

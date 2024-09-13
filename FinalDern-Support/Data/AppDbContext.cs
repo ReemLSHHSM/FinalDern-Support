@@ -41,7 +41,7 @@ namespace FinalDern_Support.Data
             base.OnModelCreating(modelBuilder);
 
             modelBuilder.Entity<JobSpareParts>()
-              .HasKey(sp => new { sp.JobID, sp.SparePartID });
+        .HasKey(jsp => jsp.Id); // Use the new Id as the primary key
 
             modelBuilder.Entity<Admin>()
          .HasOne(a => a.User)
@@ -106,18 +106,21 @@ namespace FinalDern_Support.Data
             //    .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
 
             // JobSpareParts -> Job (Many-to-One)
+            // JobSpareParts -> Job (Many-to-One)
             modelBuilder.Entity<JobSpareParts>()
                 .HasOne(jsp => jsp.Job)
                 .WithMany(j => j.JobSpareParts)
                 .HasForeignKey(jsp => jsp.JobID)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
+                .OnDelete(DeleteBehavior.Restrict);
 
+
+            // JobSpareParts -> SparePart (Many-to-One)
             // JobSpareParts -> SparePart (Many-to-One)
             modelBuilder.Entity<JobSpareParts>()
                 .HasOne(jsp => jsp.SparePart)
                 .WithMany(sp => sp.JobSpareParts)
                 .HasForeignKey(jsp => jsp.SparePartID)
-                .OnDelete(DeleteBehavior.Restrict);  // Prevent cascading deletes
+                .OnDelete(DeleteBehavior.Restrict);
 
             // KnowledgeBase -> Admin (Many-to-One)
             modelBuilder.Entity<KnowledgeBase>()

@@ -472,9 +472,9 @@ namespace FinalDern_Support.Repositories.Services
             double averageCost = reports.Average(r => r.TotalPrice);
 
             // Total and Average Time
-            TimeSpan totalTime = TimeSpan.FromTicks(reports.Sum(r => r.TotalTime.Ticks));
-            double averageTimeTicks = reports.Average(r => r.TotalTime.Ticks);
-            TimeSpan averageTime = TimeSpan.FromTicks((long)averageTimeTicks);
+            //TimeSpan totalTime = TimeSpan.FromTicks(reports.Sum(r => r.TotalTime.Ticks));
+            //double averageTimeTicks = reports.Average(r => r.TotalTime.Ticks);
+            //TimeSpan averageTime = TimeSpan.FromTicks((long)averageTimeTicks);
 
             // Total and Average Number of Parts Used
             int totalNumberOfPartsUsed = reports.Sum(r => r.NumberOfPartsUsed);
@@ -509,8 +509,8 @@ namespace FinalDern_Support.Repositories.Services
             {
                 TotalCost = totalCost,
                 AverageCost = averageCost,
-                TotalTime = totalTime,
-                AverageTime = averageTime,
+                //TotalTime = totalTime,
+                //AverageTime = averageTime,
                 TotalNumberOfPartsUsed = totalNumberOfPartsUsed,
                 AverageNumberOfPartsUsed = averageNumberOfPartsUsed,
                 MostRequestedLocation = mostRequestedLocation,

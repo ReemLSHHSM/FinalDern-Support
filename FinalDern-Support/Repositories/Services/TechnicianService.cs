@@ -63,10 +63,10 @@ namespace FinalDern_Support.Repositories.Services
 
             catch
             {
-                
+
             }
             var jobs = _context.Quotes
-           .Where(x => x.Status.ToLower() == "accepted")
+           .Where(x => x.Status.ToLower() == "accepted" && x.IsTaken == false)
              .Select(x => new GetPendingQuotesDto
              {
                  ID = x.ID,
@@ -182,7 +182,7 @@ namespace FinalDern_Support.Repositories.Services
                 QuoteID = quoteID,
                 IsComplete = false,
                 TechID = tech.ID,
-                
+
             };
 
             _context.Jobs.Add(job);
@@ -232,31 +232,43 @@ namespace FinalDern_Support.Repositories.Services
                     StatusCode = 403 // Forbidden
                 };
             }
+
             var tech = _context.Technicians.FirstOrDefault(x => x.UserID == user.Id);
-
-            var feedbacks = _context.Feedbacks
-              .Where(x => x.Job.TechID == tech.ID)
-             .Select(f => new GetJobFeedBackDto
-             {
-                 JobId = f.Job.ID,
-                 Title = f.Title,
-                 Comment = f.Comment,
-                 Rating = f.Rating
-             })
-               .ToList();
-
-            if (feedbacks != null)
+            if (tech == null)
             {
                 return new ResultDto
                 {
                     Success = false,
-                    Message = "You don't Have Any FeedBacks",
-                    StatusCode = 400
+                    Message = "Technician not found.",
+                    StatusCode = 404 // Not Found
+                };
+            }
+
+            var feedbacks = _context.Feedbacks
+                .Where(x => x.Job.TechID == tech.ID)
+                .Select(f => new GetJobFeedBackDto
+                {
+                    JobId = f.Job.ID,
+                    Title = f.Title,
+                    Comment = f.Comment,
+                    Rating = f.Rating
+                })
+                .ToList();
+
+            if (feedbacks.Count == 0) // Check if the list is empty
+            {
+                return new ResultDto
+                {
+                    Success = false,
+                    Message = "You don't have any feedback.",
+                    StatusCode = 404 // Not Found
                 };
             }
 
             return feedbacks;
+
         }
+
 
         public async Task<object> GetJobsFeedBack(ClaimsPrincipal principal, int jobID)
         {
@@ -315,7 +327,7 @@ namespace FinalDern_Support.Repositories.Services
             }
 
             var feedbacks = _context.Feedbacks.FirstOrDefault(x => x.JobID == job.ID);
-            if(feedbacks == null)
+            if (feedbacks == null)
             {
                 return new ResultDto
                 {
@@ -335,7 +347,7 @@ namespace FinalDern_Support.Repositories.Services
             return feedback;
         }
 
-        public async Task<object> TakeSpareParts(ClaimsPrincipal principal,int partsID,int jobID)
+        public async Task<object> TakeSpareParts(ClaimsPrincipal principal, int partsID, int jobID)
         {
             if (principal == null)
             {
@@ -369,7 +381,7 @@ namespace FinalDern_Support.Repositories.Services
             }
 
             var part = _context.SpareParts.FirstOrDefault(x => x.ID == partsID);
-            if(part == null || part.Quantity<1)
+            if (part == null || part.Quantity < 1)
             {
                 return new ResultDto
                 {
@@ -401,7 +413,7 @@ namespace FinalDern_Support.Repositories.Services
             };
         }
 
-        public async Task<object> PostReport(ClaimsPrincipal principal,int jobID,ReportContent reportContent)
+        public async Task<object> PostReport(ClaimsPrincipal principal, int jobID, ReportContent reportContent)
         {
             if (principal == null)
             {
@@ -434,16 +446,17 @@ namespace FinalDern_Support.Repositories.Services
                 };
             }
 
-            var job=_context.Jobs.FirstOrDefault(x=>x.ID==jobID);
-            if(job == null)
+            var job = _context.Jobs.FirstOrDefault(x => x.ID == jobID);
+            if (job == null)
             {
                 return new ResultDto
                 {
                     Success = false,
-                    Message = "Job Not Taken Yet.",
-                    StatusCode = 404 // Forbidden
+                    Message = "Job Not Found.",
+                    StatusCode = 404 // Not Found
                 };
             }
+
 
             if (!job.IsComplete)
             {
@@ -451,34 +464,46 @@ namespace FinalDern_Support.Repositories.Services
                 {
                     Success = false,
                     Message = "Job Not Done Yet.",
-                    StatusCode = 400 // Forbidden
+                    StatusCode = 400 // Bad Request
                 };
             }
 
             var report = new Report
             {
+                JobID = jobID,
+                TechnicianID = job.TechID,
                 Title = reportContent.Title,
                 Description = reportContent.Content,
                 TotalTime = reportContent.totalTime,
                 NumberOfPartsUsed = _context.JobSpareParts.Where(x => x.JobID == jobID).Count(),
                 TotalPrice = _context.JobSpareParts
-                 .Where(jsp => jsp.JobID == jobID)
-                 .GroupBy(jsp => jsp.SparePartID)
-                 .Sum(g => g.Count() * g.FirstOrDefault().SparePart.Price+20)
+             .Where(jsp => jsp.JobID == job.ID)
+            .Select(jsp => new
+            {
+                jsp.SparePartID,
+                SparePartPrice = jsp.SparePart.Price
+            })
+           .AsEnumerable() // Switch to in-memory for further operations
+          .GroupBy(jsp => jsp.SparePartID)
+          .Sum(g => g.Count() * g.First().SparePartPrice) + 20
+
+                // Handle null spare part safely
             };
 
+
             _context.Reports.Add(report);
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             return new ResultDto
             {
                 Success = true,
-                Message = "Report Posted Succesfully.",
-                StatusCode = 200 
+                Message = "Report Posted Successfully.",
+                StatusCode = 200
             };
         }
 
-        public async Task<object> FinishJob(ClaimsPrincipal principal,int jobID)
+
+        public async Task<object> FinishJob(ClaimsPrincipal principal, int jobID)
         {
             if (principal == null)
             {
@@ -511,9 +536,9 @@ namespace FinalDern_Support.Repositories.Services
                 };
             }
 
-            var job=_context.Jobs.FirstOrDefault(x=>x.ID==jobID);
+            var job = _context.Jobs.FirstOrDefault(x => x.ID == jobID);
 
-            if(job == null)
+            if (job == null)
             {
                 return new ResultDto
                 {
@@ -539,14 +564,96 @@ namespace FinalDern_Support.Repositories.Services
             tech.IsAvailable = true;
             _context.SaveChanges();
 
-        
+
+            return new ResultDto
+            {
+                Success = true,
+                Message = "Job Finished Successfully.",
+                StatusCode = 200
+            };
+
+        }
+
+        public async Task<object> GetAllCompletedJobs(ClaimsPrincipal principal)
+        {
+            if (principal == null)
+            {
                 return new ResultDto
                 {
-                    Success = true,
-                    Message = "Job Finished Successfully.",
-                    StatusCode = 200 
-               };
-            
+                    Success = false,
+                    Message = "ClaimsPrincipal cannot be null.",
+                    StatusCode = 400 // Bad Request
+                };
+            }
+
+            try
+            {
+                var user = await _userManager.GetUserAsync(principal);
+                if (user == null)
+                {
+                    return new ResultDto
+                    {
+                        Success = false,
+                        Message = "User not found.",
+                        StatusCode = 404 // Not Found
+                    };
+                }
+
+                if (!await _userManager.IsInRoleAsync(user, "Technician"))
+                {
+                    return new ResultDto
+                    {
+                        Success = false,
+                        Message = "Access denied.",
+                        StatusCode = 403 // Forbidden
+                    };
+                }
+
+                var tech = _context.Technicians.FirstOrDefault(x => x.UserID == user.Id);
+                if (tech == null)
+                {
+                    return new ResultDto
+                    {
+                        Success = false,
+                        Message = "Technician not found.",
+                        StatusCode = 404 // Not Found
+                    };
+                }
+
+                var completedJobs = _context.Jobs
+                    .Where(j => j.TechID == tech.ID && j.IsComplete)
+                    .Select(j => new
+                    {
+                        JobId = j.ID,
+                        QuoteID = j.QuoteID,
+                        TechID = j.TechID,
+                        IsComplete = j.IsComplete
+                    })
+                    .ToList();
+
+                if (completedJobs.Count == 0)
+                {
+                    return new ResultDto
+                    {
+                        Success = false,
+                        Message = "No completed jobs found.",
+                        StatusCode = 404 // Not Found
+                    };
+                }
+
+                return completedJobs;
+
+            }
+            catch (Exception ex)
+            {
+                // Log the exception as needed
+                return new ResultDto
+                {
+                    Success = false,
+                    Message = $"An error occurred: {ex.Message}",
+                    StatusCode = 500 // Internal Server Error
+                };
+            }
         }
     }
 }

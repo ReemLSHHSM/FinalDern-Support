@@ -2,6 +2,7 @@
 {
     public class JobSpareParts
     {
+        public int Id { get; set; } // Auto-incrementing primary key
         public int JobID { get; set; }
         public int SparePartID { get; set; }
 

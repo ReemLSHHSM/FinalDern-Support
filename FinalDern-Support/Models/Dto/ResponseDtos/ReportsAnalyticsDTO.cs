@@ -4,8 +4,8 @@
     {
         public double TotalCost { get; set; }
         public double AverageCost { get; set; }
-        public TimeSpan TotalTime { get; set; }
-        public TimeSpan AverageTime { get; set; }
+        //public TimeSpan TotalTime { get; set; }
+        //public TimeSpan AverageTime { get; set; }
         public int TotalNumberOfPartsUsed { get; set; }
         public double AverageNumberOfPartsUsed { get; set; }
         public string MostRequestedLocation { get; set; }

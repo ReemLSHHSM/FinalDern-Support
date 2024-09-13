@@ -1,7 +1,13 @@
-﻿using FinalDern_Support.Models.Dto.RequestDtos;
+﻿using FinalDern_Support.Data;
+using FinalDern_Support.Models;
+using FinalDern_Support.Models.Dto.RequestDtos;
+using FinalDern_Support.Models.Dto.ResponseDtos;
 using FinalDern_Support.Repositories.Interfaces;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Security.Claims;
 
 namespace FinalDern_Support.Controllers
 {
@@ -11,10 +17,13 @@ namespace FinalDern_Support.Controllers
     public class TechnicianController : ControllerBase
     {
         private readonly ITechnician _technician;
-
-        public TechnicianController(ITechnician technician)
+        private readonly AppDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        public TechnicianController(ITechnician technician, UserManager<ApplicationUser> userManager, AppDbContext context)
         {
             _technician = technician;
+            _userManager = userManager;
+            _context = context;
         }
 
 
@@ -67,5 +76,14 @@ namespace FinalDern_Support.Controllers
             var result=await _technician.FinishJob(User, id);
             return Ok(result);
         }
+
+        [HttpGet("GetAllCompletedJobs")]
+        public async Task<ActionResult<object>> GetAllCompletedJobs()
+        {
+            var result = await _technician.GetAllCompletedJobs(User);
+            return Ok(result);
+        }
+        }
+
     }
-}
+

@@ -4,6 +4,7 @@ using FinalDern_Support.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace FinalDern_Support.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240913111423_addIDTOJUNCTION")]
+    partial class addIDTOJUNCTION
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -45,7 +48,7 @@ namespace FinalDern_Support.Migrations
                         new
                         {
                             ID = 1,
-                            UserID = "21d5370c-cb33-4558-9925-3d7224ce70ff"
+                            UserID = "58d38077-c887-4464-a30b-1933170ae7fc"
                         });
                 });
 
@@ -120,18 +123,18 @@ namespace FinalDern_Support.Migrations
                     b.HasData(
                         new
                         {
-                            Id = "21d5370c-cb33-4558-9925-3d7224ce70ff",
+                            Id = "58d38077-c887-4464-a30b-1933170ae7fc",
                             AccessFailedCount = 0,
-                            ConcurrencyStamp = "9a6122bf-39c9-462e-a36c-664c9803fd90",
+                            ConcurrencyStamp = "030de96f-7bfe-4ac6-ac8a-c17db5ec82a1",
                             Email = "admin@example.com",
                             EmailConfirmed = true,
                             LockoutEnabled = false,
                             NormalizedEmail = "ADMIN@EXAMPLE.COM",
                             NormalizedUserName = "ADMIN",
-                            PasswordHash = "AQAAAAIAAYagAAAAEIPqEqmIF3PJBy3NiamGStYG+n1Rl4BqGekueBhpGSGD8axB1anwnO+4RCu3noLmqw==",
+                            PasswordHash = "AQAAAAIAAYagAAAAEHuQ0266SfCw9cRkw0kwDxPwhngtKoRq9Lw7SLa7kZqD7KX2wdB7PFUqQ3u9k9/qZQ==",
                             PhoneNumber = "1234567890",
                             PhoneNumberConfirmed = true,
-                            SecurityStamp = "6b99266b-d1aa-476c-83c0-f28f49ef5158",
+                            SecurityStamp = "838c0283-904c-4e15-aca1-394a6ef91cef",
                             TwoFactorEnabled = false,
                             UserName = "admin",
                             type = "Admin"
@@ -225,21 +228,16 @@ namespace FinalDern_Support.Migrations
 
             modelBuilder.Entity("FinalDern_Support.Models.JobSpareParts", b =>
                 {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
                     b.Property<int>("JobID")
                         .HasColumnType("int");
 
                     b.Property<int>("SparePartID")
                         .HasColumnType("int");
 
-                    b.HasKey("Id");
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
 
-                    b.HasIndex("JobID");
+                    b.HasKey("JobID", "SparePartID");
 
                     b.HasIndex("SparePartID");
 
@@ -348,9 +346,8 @@ namespace FinalDern_Support.Migrations
                     b.Property<double>("TotalPrice")
                         .HasColumnType("float");
 
-                    b.Property<string>("TotalTime")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<TimeSpan>("TotalTime")
+                        .HasColumnType("time");
 
                     b.HasKey("ID");
 
@@ -483,21 +480,21 @@ namespace FinalDern_Support.Migrations
                         new
                         {
                             Id = "admin",
-                            ConcurrencyStamp = "6e1bbb65-af14-42ca-8137-2dc44032bad6",
+                            ConcurrencyStamp = "8e95da35-5d5a-4d83-a3b3-2eb4f98ba2c2",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
                         },
                         new
                         {
                             Id = "customer",
-                            ConcurrencyStamp = "5c0ae7ee-c714-45ae-a639-00f28ebc8414",
+                            ConcurrencyStamp = "53016e5c-2907-4ca9-a15d-69253430407e",
                             Name = "Customer",
                             NormalizedName = "CUSTOMER"
                         },
                         new
                         {
                             Id = "technician",
-                            ConcurrencyStamp = "1ad15ec6-22b8-45e0-9ae8-544fd10a8b05",
+                            ConcurrencyStamp = "ed7b1028-3471-4ee4-818e-b9e6c8e91099",
                             Name = "Technician",
                             NormalizedName = "TECHNICIAN"
                         });
@@ -592,7 +589,7 @@ namespace FinalDern_Support.Migrations
                     b.HasData(
                         new
                         {
-                            UserId = "21d5370c-cb33-4558-9925-3d7224ce70ff",
+                            UserId = "58d38077-c887-4464-a30b-1933170ae7fc",
                             RoleId = "Admin"
                         });
                 });
