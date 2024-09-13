@@ -158,7 +158,7 @@ namespace FinalDern_Support.Repositories.Services
                 Location = requestSupportRequestDto.Location,
                 Status = "Pending",
                 CustomerID=cus.ID,
-                IsTaken = false
+                //IsTaken = false
 
 
             };
