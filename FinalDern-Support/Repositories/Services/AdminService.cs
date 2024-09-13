@@ -188,6 +188,7 @@ namespace FinalDern_Support.Repositories.Services
 
         }
 
+        //To Accept them
         public async Task<object> GetAllPendingRequests(ClaimsPrincipal principal){
 
             if (principal == null)
@@ -230,7 +231,7 @@ namespace FinalDern_Support.Repositories.Services
                 return new ResultDto
                 {
                     Success = false,
-                    Message = "No Request Was Submitted Yet",
+                    Message = "No Request Wasn't Submitted Yet",
                     StatusCode = 404
                 };
             }
@@ -238,6 +239,7 @@ namespace FinalDern_Support.Repositories.Services
             return pendingRequests;
         }
 
+        //To Create A quote For Them
         public async Task<object> GetAllAcceptedRequests(ClaimsPrincipal principal)
         {
 

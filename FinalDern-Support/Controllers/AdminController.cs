@@ -37,6 +37,8 @@ namespace FinalDern_Support.Controllers
             return Ok(user);
         }
 
+
+
         [HttpPut("AcceptSupportRequest/{requestID}")]
         public async Task<IActionResult> AcceptSupportRequest(int requestID)
         {
@@ -44,6 +46,8 @@ namespace FinalDern_Support.Controllers
 
             return Ok(result);
         }
+
+
 
         [HttpGet("GetAllPendingRequests")]
         public async Task<ActionResult<object>> GetAllPendingRequests()

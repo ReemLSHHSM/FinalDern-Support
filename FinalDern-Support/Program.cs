@@ -31,8 +31,8 @@ namespace FinalDern_Support
             builder.Services.AddTransient<IUser, IdentityUserServices>();
             builder.Services.AddTransient<ICustomer, CustomerService>();
             builder.Services.AddScoped<IAdmin, AdminService>();
+            builder.Services.AddScoped<ITechnician, TechnicianService>();
 
-            
 
             // Swagger Configuration
             builder.Services.AddSwaggerGen(options =>

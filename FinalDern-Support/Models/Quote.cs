@@ -10,6 +10,7 @@
             public DateTime EndAt { get; set; }
             public string Priority { get; set; }
             public string Status { get; set; }
+            public bool IsTaken { get; set; }
 
         // Navigation properties
         public Request Request { get; set; }
